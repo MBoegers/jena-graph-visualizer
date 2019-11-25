@@ -1,0 +1,3 @@
+file:
+  input: ./src/main/resources/testdata/SmallGridTestConfiguration_RN_DL_v3.0.0.xml
+  output: ./src/main/resources/testdata/SmallGridTestConfiguration_RN_DL_v3.0.0.svg
