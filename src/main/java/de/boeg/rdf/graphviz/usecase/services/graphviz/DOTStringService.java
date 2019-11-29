@@ -4,6 +4,7 @@ import de.boeg.rdf.graphviz.usecase.ParseGraphUseCase;
 import guru.nidi.graphviz.model.Graph;
 import lombok.var;
 import org.apache.jena.graph.Triple;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import static guru.nidi.graphviz.model.Factory.graph;
 
 @Service
-@Primary
+@Qualifier("dot")
 public class DOTStringService implements ParseGraphUseCase<String> {
 
     @Override

@@ -7,6 +7,7 @@ import guru.nidi.graphviz.model.Graph;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.apache.jena.graph.Triple;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import static guru.nidi.graphviz.model.Factory.graph;
 
 @Service
 @Slf4j
+@Qualifier("graphviz")
 public class GraphVizService implements ParseGraphUseCase<Renderer> {
 
     @Value("${file.output}")
