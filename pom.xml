@@ -16,6 +16,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <jena.version>3.13.1</jena.version>
     </properties>
 
     <dependencies>
@@ -27,22 +28,7 @@
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>apache-jena</artifactId>
-            <version>3.13.1</version>
-            <type>pom</type>
-        </dependency>
-
-        <!-- Graph Viz Lib -->
-        <dependency>
-            <groupId>guru.nidi</groupId>
-            <artifactId>graphviz-java</artifactId>
-            <version>0.11.2</version>
-        </dependency>
-
-        <!-- Apache Bartik SVG Lib -->
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-all</artifactId>
-            <version>1.12</version>
+            <version>${jena.version}</version>
             <type>pom</type>
         </dependency>
 
@@ -51,6 +37,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

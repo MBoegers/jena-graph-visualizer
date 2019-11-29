@@ -4,6 +4,7 @@ import de.boeg.rdf.graphviz.usecase.ReadTriplesUseCase;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -28,7 +29,7 @@ public class ReadRDFService implements ReadTriplesUseCase {
 
     private List<Triple> modelToList(Model model) {
         return model.listStatements()
-                .mapWith(statement -> statement.asTriple())
+                .mapWith(Statement::asTriple)
                 .toList();
     }
 }

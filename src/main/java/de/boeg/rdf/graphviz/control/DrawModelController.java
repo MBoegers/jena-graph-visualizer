@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.apache.jena.graph.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,29 +15,33 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 @RestController
 @Slf4j
 public class DrawModelController {
 
+    private final Path inputFile;
+    private final Path outputFile;
+    private final ReadRDFService readRDFService;
+    private final ParseGraphUseCase<String> drawForcedSVGGraphUC;
 
-    @Value("${file.input}")
-    private Path inputFile;
-    @Value("${file.output}")
-    private Path outputFile;
     @Autowired
-    private ReadRDFService readRDFService;
-    @Autowired
-    private ParseGraphUseCase<String> drawForcedSVGGraphUC;
-    @Autowired
-    private ParseGraphUseCase<Renderer> darwWithGraphViz;
-    @Autowired
-    private ParseGraphUseCase<Void> internalGraphViz;
+    public DrawModelController(ReadRDFService readRDFService,
+                               ParseGraphUseCase<String> drawForcedSVGGraphUC,
+                               @Value("${file.input}") Path inputFile,
+                               @Value("${file.output}") Path outputFile) {
+        this.readRDFService = readRDFService;
+        this.drawForcedSVGGraphUC = drawForcedSVGGraphUC;
+        this.inputFile = inputFile;
+        this.outputFile = outputFile;
+    }
 
     @RequestMapping("/draw/model")
     public void landingPage() throws IOException {
         List<Triple> triples = null;
+        log.info("Start reading model from {}", inputFile.toString());
         try (InputStream inputStream = Files.newInputStream(inputFile)) {
             triples = readRDFService.fromStream(inputStream);
 
@@ -44,26 +49,18 @@ public class DrawModelController {
             log.error("Failed to read resource", e);
         }
 
-//        this.internalGraphViz.fromTriples(triples);
+        log.info("Start parsing SVG");
+        String svg = drawForcedSVGGraphUC.fromTriples(triples);
 
-//        String dotGraph = drawForcedSVGGraphUC.fromTriples(triples);
-//
-//        if(Files.exists(outputFile)) {
-//            Files.delete(outputFile);
-//        }
-//        Files.createFile(outputFile);
-//        try(BufferedWriter writer = Files.newBufferedWriter(outputFile, StandardOpenOption.WRITE)) {
-//            writer.write(dotGraph, 0, dotGraph.length());
-//            writer.flush();
-//        }
-
-        var svgImg = darwWithGraphViz.fromTriples(triples);
-        try {
-            svgImg.toFile(outputFile.toFile());
-        } catch (IOException e) {
-            e.printStackTrace();
+        log.info("Start writing SVG");
+        if(Files.exists(outputFile)) {
+            Files.delete(outputFile);
         }
-
-        log.info("Done Parsing to: " + outputFile.toString());
+        Files.createFile(outputFile);
+        try(BufferedWriter writer = Files.newBufferedWriter(outputFile, StandardOpenOption.WRITE)) {
+            writer.write(svg, 0, svg.length());
+            writer.flush();
+        }
+        log.info("Done writing to: {}", outputFile.toString());
     }
 }
