@@ -1,0 +1,9 @@
+<svg x="0" y="0" height="130" width="330"> 
+    <g> <!-- min hight: 50 + (#properties * 35) -->
+        <rect x="5" y ="5" width="320" height="120" class="classbox"/>
+        <text x="150" y="15" class="classname">cim:PowerSystemResource</text>
+        <text x="15" y="35">_046d294b-c766-11e1-8775-005056c00008</text>
+    <g/>
+    <!--NEXT_PROPERTY-->
+</svg>
+<!--NEXT_INSTANCE-->

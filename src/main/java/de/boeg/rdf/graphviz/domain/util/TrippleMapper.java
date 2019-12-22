@@ -1,21 +1,21 @@
 package de.boeg.rdf.graphviz.domain.util;
 
-import guru.nidi.graphviz.attribute.Label;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.vocabulary.RDF;
 
 import java.util.function.Function;
-
-import static guru.nidi.graphviz.model.Factory.node;
-import static guru.nidi.graphviz.model.Factory.to;
 
 @UtilityClass
 public class NodeMapperUtil {
 
     @AllArgsConstructor
+    /*
+      Represents a triple with {@linkplain Node}
+     */
     public static class NodeTriple {
         private final Node s;
         private final Node p;
@@ -24,23 +24,27 @@ public class NodeMapperUtil {
 
     @Getter
     @AllArgsConstructor
+    /*
+     * Represents a triple with only Strings
+     */
     public static class StringTriple {
         private final String s;
         private final String l;
         private final String d;
+        private final boolean isLiteral;
     }
 
+    /**
+     * Map a {@link Triple} to {@link NodeTriple} by getting the Subject, Predicate and Object as {@link Node}
+     */
     public static final Function<Triple, NodeTriple> jenaTriple2NodeTriple = t ->
             new NodeTriple(t.getMatchSubject(), t.getMatchPredicate(), t.getMatchObject());
 
+    /**
+     * Map a {@link NodeTriple} to  {@link StringTriple} by parsing the {@link Node} to the representing String
+     */
     public static final Function<NodeTriple, StringTriple> nodeTriple2StringTriple = t ->
-            new StringTriple(nodeAsString(t.s), nodeAsString(t.p), nodeAsString(t.o));
-
-    public static final Function<StringTriple, guru.nidi.graphviz.model.Node> stringTriple2GraphVizNode = t ->
-            node(t.s).link(to(node(t.d)).with(Label.of(t.l)));
-
-    public static final Function<guru.nidi.graphviz.model.Node, String> graphVizNode2DotString = guru.nidi.graphviz.model.Node::toString;
-
+            new StringTriple(nodeAsString(t.s), nodeAsString(t.p), nodeAsString(t.o), t.o.isLiteral() || RDF.type.asNode().equals(t.p));
 
     private String nodeAsString(Node n) {
         String nodeStr;

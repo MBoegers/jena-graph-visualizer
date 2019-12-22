@@ -1,0 +1,6 @@
+<svg x="5" y="50" id="1"> <!-- y = 50 * i (i equals id) -->
+    <line class="splitter" x1="0" x2="320" y1="0" y2="0"/>
+    <text x="5" y="10" class="property"><!--PROPERTYNAME--></text>
+    <text x="10" y="30" class="literal"><!--LITERALVALUE--></text>
+</svg>
+<!--NEXT_PROPERTY-->

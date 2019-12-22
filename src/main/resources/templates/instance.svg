@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+ height="500" width="500">
+    <defs>
+        <style type="text/css">
+        <![CDATA[
+            .classbox {
+            fill: yellow;
+            stroke: black;
+            stroke-width: 3;
+            }
+            .splitter {
+                stroke: grey;
+                stroke-width: 1;
+            }
+            .classname {
+                font-size: x-small;
+            }
+            .mrid {
+                font-size: x-large;
+            }
+            .property {
+                font-size: x-small;
+            }
+            .literal {
+                font-size: small;
+            }
+        ]]>
+        </style>
+    </defs>
+
+    <svg x="0" y="0" height="130" width="330"> 
+        <g> <!-- min hight: 50 + (#properties * 35) -->
+            <rect x="5" y ="5" width="320" height="120" class="classbox"/>
+            <text x="150" y="15" class="classname">cim:PowerSystemResource</text>
+            <text x="15" y="35">_046d294b-c766-11e1-8775-005056c00008</text>
+        <g/>
+        <svg x="5" y="50" id="1"> <!-- y = 50 * i (i equals id) -->
+            <line class="splitter" x1="0" x2="320" y1="0" y2="0"/>
+            <text x="5" y="10" class="property">cim:ACLineSegment.shortCircuitEndTemperature</text>
+            <text x="10" y="30" class="literal">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</text>
+        </svg>
+        <svg x="5" y="85" id="2">
+            <line class="splitter" x1="0" x2="320" y1="0" y2="0"/>
+            <text x="5" y="10" class="property">cim:ACLineSegment.shortCircuitEndTemperature</text>
+            <text x="10" y="30" class="literal">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</text>
+        </svg>
+    </svg>
+</svg>
