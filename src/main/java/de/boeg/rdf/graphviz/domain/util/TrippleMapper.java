@@ -10,7 +10,7 @@ import org.apache.jena.vocabulary.RDF;
 import java.util.function.Function;
 
 @UtilityClass
-public class NodeMapperUtil {
+public class TrippleMapper {
 
     @AllArgsConstructor
     /*

@@ -2,17 +2,16 @@ package de.boeg.rdf.graphviz.control;
 
 import de.boeg.rdf.graphviz.usecase.ParseGraphUseCase;
 import de.boeg.rdf.graphviz.usecase.services.ReadRDFService;
-import guru.nidi.graphviz.engine.Renderer;
 import lombok.extern.slf4j.Slf4j;
-import lombok.var;
 import org.apache.jena.graph.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;

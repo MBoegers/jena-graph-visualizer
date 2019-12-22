@@ -1,15 +1,14 @@
 package de.boeg.rdf.graphviz.domain.svg;
 
-import de.boeg.rdf.graphviz.domain.util.NodeMapperUtil;
+import de.boeg.graph.layout.domain.Node;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Instance {
-    private final List<Property> properties = new ArrayList<>();
+public class Instance extends Node<String> {
+    private final List<Literal> literals;
 
     private final static String PROPERTY = "<!--PROPERTIES-HERE-->";
     private static final String CLASSNAME = "<!--CLASS-->";
@@ -20,56 +19,82 @@ public class Instance {
     private static final String INSTANCE_YPOS = "<!--INSTANCE_YPOS-->";
 
 
-    private static final String INSTANCE = "<svg x=\"" + INSTANCE_XPOS + "\" y=\"" + INSTANCE_YPOS + "\" height=\"" + INSTANCE_HEIGHT + "\" width=\"330\"> \n" +
-            "    <g>\n" +
-            "        <rect x=\"5\" y =\"5\" width=\"320\" height=\"" + RECT_HEIGHT + "\" class=\"classbox\"/>\n" +
-            "        <text x=\"150\" y=\"15\" class=\"classname\">" + CLASSNAME + "</text>\n" +
-            "        <text x=\"15\" y=\"35\">" + MRID + "</text>\n" +
-            "    <g/>\n" +
+    private static final String INSTANCE = "\t<svg x=\"" + INSTANCE_XPOS + "\" y=\"" + INSTANCE_YPOS + "\" height=\"" + INSTANCE_HEIGHT + "\" width=\"330\"> \n" +
+            "\t    <g>\n" +
+            "\t        <rect x=\"5\" y =\"5\" width=\"320\" height=\"" + RECT_HEIGHT + "\" class=\"classbox\"/>\n" +
+            "\t        <text x=\"150\" y=\"15\" class=\"classname\">" + CLASSNAME + "</text>\n" +
+            "\t        <text x=\"15\" y=\"35\">" + MRID + "</text>\n" +
+            "\t    <g/>\n" +
             PROPERTY +
-            "</svg>\n";
+            "\t</svg>\n";
 
     private final String mrid;
-
-    private final String className;
-
-    @Getter
-    @Setter
-    private Integer instanceX = 0;
-    @Getter
-    @Setter
-    private Integer instanceY = 0;
+    private String className;
+    private Double instanceX = 0d;
+    private Double instanceY = 0d;
 
     @Getter
     private Integer height = 50;
 
-    public Instance(String mrid, List<NodeMapperUtil.StringTriple> triples) {
+    public Instance(String mrid, List<Literal> literals) {
         this.mrid = mrid;
         className = "UnknownClassName";
-        triples.parallelStream()
-                .map(Property::new)
-                .forEach(this::add);
+        this.literals = new ArrayList<>(literals.size());
+        for (Literal l : literals) {
+            this.add(l);
+        }
     }
 
-    private void add(Property property) {
-        property.setPosition(properties.size()); // set position
-        properties.add(property);
-        height += 45;
+    private void add(Literal literal) {
+        if ("rdf:type".equals(literal.getName())) {
+            className = literal.getValue();
+        } else {
+            literal.setLiteralID(literals.size()); // set position
+            literals.add(literal);
+            height += 45;
+        }
     }
 
     String toSVGString() {
         // parse to string
-        String propertiesStr = properties.parallelStream()
-                .map(Property::toSVGString)
+        String propertiesStr = literals.parallelStream()
+                .map(Literal::toSvgString)
                 .collect(Collectors.joining());
+        String xPos = Long.toString(Math.round(instanceX));
+        String yPos = Long.toString(Math.round(instanceY));
         //concat
         return INSTANCE
-                .replace(INSTANCE_XPOS, instanceX.toString())
-                .replace(INSTANCE_YPOS, instanceY.toString())
+                .replace(INSTANCE_XPOS, xPos)
+                .replace(INSTANCE_YPOS, yPos)
                 .replace(CLASSNAME, className)
                 .replace(MRID, mrid)
                 .replace(INSTANCE_HEIGHT, Integer.toString(height))
                 .replace(RECT_HEIGHT, Integer.toString(height - 10))
                 .replace(PROPERTY, propertiesStr);
+    }
+
+    @Override
+    public String getIdentifier() {
+        return mrid;
+    }
+
+    @Override
+    public double getX() {
+        return instanceX;
+    }
+
+    @Override
+    public double getY() {
+        return instanceY;
+    }
+
+    @Override
+    public void setX(double x) {
+        instanceX = x;
+    }
+
+    @Override
+    public void setY(double y) {
+        instanceY = y;
     }
 }
